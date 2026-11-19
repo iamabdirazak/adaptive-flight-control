@@ -1,12 +1,22 @@
 # Requirements
 
-Adaptive Flight Control · version 2 · 18 November 2026
+Adaptive Flight Control · version 3 · 19 November 2026
 
 ## Purpose
 
 A flight controller for compact quadrotors that flies well when the drone changes in ways it cannot measure: a different frame, a new payload, wind, a weak or failed motor. It is delivered as a small C library that runs on the flight controller's microcontroller, inside an existing flight stack or custom firmware.
 
 Every number in this document is a target. Results are reported against these targets once measured.
+
+## What adaptive means
+
+The controller is a cascaded PID that watches how the drone responds, works out what has changed about it, and changes its own settings to match while it flies. Everyday flight stays the tuned PID. Three things adapt, each tied to a failure measured on the fixed PID.
+
+| What changes on the drone | What the controller adapts | Scenarios |
+|---|---|---|
+| Weight, from payload or battery | The thrust it commands, through hover-thrust estimation | S2, S3 |
+| Dynamics, from inertia, slow motors or a different frame | The PID gains | S8 |
+| A motor failing, partly or completely | The control mode: a controlled spin and a landing | S6, S7, S9 |
 
 ## Scope
 
@@ -58,8 +68,8 @@ Pass criterion: at least 90 % of trials meet the target.
 
 | ID | Scenario | Target | Fair PID |
 |---|---|---|---|
-| S6 | Motor damage, one motor left with 20 to 40 % thrust | ≤ 0.30 m from hover | 17 % of trials |
-| S7 | Combined changes, payload +30 % and one motor at 40 %, in wind up to 8 m/s | ≤ 0.30 m from hover | 0 % |
+| S6 | Motor damage, one motor left with 20 to 40 % thrust | Detected, then lands within 2 m, under 1.5 m/s, tilted under 30° | 17 % held position |
+| S7 | Combined changes, payload +30 % and one motor at 40 %, in wind up to 8 m/s | Detected, then lands within 2 m, under 1.5 m/s, tilted under 30° | 0 % held position |
 | S8 | Extreme airframe: mass ±45 %, inertia ±60 %, motor constants ±30 %, motor delay up to 60 ms | ≤ 0.15 m RMS | 81 % |
 | S9 | One motor fails completely in hover | Lands within 2 m, under 1.5 m/s, tilted under 30° | 0 % |
 
@@ -138,4 +148,8 @@ The final airframe and component choice, which comes from the hardware design. T
 ## Changes from version 1
 
 Version 1 set absolute targets before anything was measured. Once the PID baseline was made fair, it met every target from S1 to S5 in all trials, so those targets could not show what adaptation adds. Version 2 holds the everyday scenarios to the fair PID's measured numbers, and adds hard scenarios S6 to S8 where fixed gains were measured to fail. Motor failure moves from S6 to S9, RPM loss from S7 to S10 and the guard from S8 to S11.
+
+## Changes from version 2
+
+Version 2 planned a learned policy that replaces the PID. A first teacher policy trained with reinforcement learning flew far worse than the fair PID, and the measurements showed the PID only fails in three specific ways. Version 3 keeps the PID and makes it adaptive in exactly those three ways. A motor left with 20 to 40 % thrust is treated as a partial failure, so S6 and S7 are now judged on detecting it and landing safely rather than on holding position.
 

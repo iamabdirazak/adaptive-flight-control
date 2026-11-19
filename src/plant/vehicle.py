@@ -17,6 +17,7 @@ class Vehicle:
     torque_ratio: float = 0.016  # m, yaw torque per newton of thrust
     motor_time_constant: float = 0.020  # s, first-order lag of a motor
     drag: float = 0.10  # N per m/s, linear body drag
+    rotational_drag: float = 3e-3  # N m per rad/s, settles a three-motor spin at about 25 rad/s
     gravity: float = 9.81  # m/s²
     # PX4 quad X order: front-right, rear-left, front-left, rear-right.
     # +1 spins counter-clockwise seen from above, -1 clockwise.

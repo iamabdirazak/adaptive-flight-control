@@ -1,0 +1,83 @@
+{
+  "S1": {
+    "name": "Nominal flight",
+    "metric": "rms",
+    "unit": "m",
+    "target": 0.1,
+    "median": 0.01623300090432167,
+    "p95": 0.01623300090432167,
+    "passed": 1.0
+  },
+  "S2": {
+    "name": "Unknown airframe",
+    "metric": "rms",
+    "unit": "m",
+    "target": 0.15,
+    "median": 0.01725931279361248,
+    "p95": 0.02354642003774643,
+    "passed": 1.0
+  },
+  "S3": {
+    "name": "Payload added",
+    "metric": "drop",
+    "unit": "m",
+    "target": 0.3,
+    "median": 0.08023691177368164,
+    "p95": 0.08023691177368164,
+    "passed": 1.0
+  },
+  "S4": {
+    "name": "Wind and gusts",
+    "metric": "deviation",
+    "unit": "m",
+    "target": 0.5,
+    "median": 0.058663416653871536,
+    "p95": 0.10052601993083954,
+    "passed": 1.0
+  },
+  "S5": {
+    "name": "Weak motor",
+    "metric": "deviation",
+    "unit": "m",
+    "target": 0.3,
+    "median": 0.0690695121884346,
+    "p95": 0.0690695121884346,
+    "passed": 1.0
+  },
+  "S6": {
+    "name": "Motor damage",
+    "metric": "deviation",
+    "unit": "m",
+    "target": 0.3,
+    "median": 0.2877219617366791,
+    "p95": 2.8665292263031006,
+    "passed": 0.5600000023841858
+  },
+  "S7": {
+    "name": "Combined changes",
+    "metric": "deviation",
+    "unit": "m",
+    "target": 0.3,
+    "median": 0.35373175144195557,
+    "p95": 0.4905669093132019,
+    "passed": 0.125
+  },
+  "S8": {
+    "name": "Extreme airframe",
+    "metric": "rms",
+    "unit": "m",
+    "target": 0.15,
+    "median": 0.017705362290143967,
+    "p95": 0.02993146702647209,
+    "passed": 1.0
+  },
+  "S9": {
+    "name": "Motor failure",
+    "metric": "landing",
+    "unit": "m",
+    "target": 2.0,
+    "median": Infinity,
+    "p95": Infinity,
+    "passed": 0.0
+  }
+}

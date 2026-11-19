@@ -17,6 +17,8 @@ def rollout(scenario: Scenario, make_controller, vehicle, trials: int, seed: int
     start, _, _ = scenario.path(trials, 0.0, altitude=altitude)
     drone.reset(start)
     controller = make_controller(trials)
+    if hasattr(controller, "drone"):  # learned controllers read the drone they fly
+        controller.drone = drone
     wind = Wind(trials, scenario.wind, generator) if scenario.wind else None
     heading = torch.zeros(trials)
     steps = round(scenario.seconds / CONTROL_PERIOD)

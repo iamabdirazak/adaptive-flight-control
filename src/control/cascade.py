@@ -90,3 +90,15 @@ class Cascade:
         scale = room.min(-1, keepdim=True).values.clamp(0.0, 1.0)
         return (base + scale * yaw).clamp(0.0, self.max_thrust)
 
+
+    def reset(self, rows):
+        """Forget everything learned in flight for these drones, as on a new take-off."""
+        self.integral[rows] = 0.0
+        self.rate_integral[rows] = 0.0
+        self.mass[rows] = self.v.mass
+        self.last_thrust[rows] = self.v.mass * self.v.gravity
+        if self.hover is not None:
+            self.hover.mass[rows] = self.v.mass
+            self.hover.accel[rows] = 0.0
+            if self.hover.velocity is not None:
+                self.hover.velocity[rows] = 0.0

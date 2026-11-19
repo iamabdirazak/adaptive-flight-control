@@ -53,7 +53,7 @@ class Quadrotor:
         accel = (R @ thrust_body[..., None]).squeeze(-1) - self.drag[:, None] * air
         accel = accel / self.mass[:, None]
         accel[:, 2] += v.gravity
-        torque = wrench[:, 1:]
+        torque = wrench[:, 1:] - v.rotational_drag * self.rate
         spin = torch.cross(self.rate, self.inertia * self.rate, dim=-1)
         rate = self.rate + (torque - spin) / self.inertia * dt
         velocity = self.velocity + accel * dt
