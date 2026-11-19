@@ -1,0 +1,23 @@
+Metadata-Version: 2.4
+Name: adaptive-flight-control
+Version: 0.1.0
+Summary: A modular adaptive flight controller for quadrotors, with a learned policy that adapts to frame, payload, wind and motor health.
+Author: Abdirazak Mubarak
+License-Expression: MIT
+Requires-Python: >=3.10
+Description-Content-Type: text/markdown
+License-File: LICENSE
+Requires-Dist: numpy
+Requires-Dist: torch
+Requires-Dist: matplotlib
+Provides-Extra: test
+Requires-Dist: pytest; extra == "test"
+Dynamic: license-file
+
+# Adaptive Flight Control
+
+A modular adaptive flight controller for quadrotors. A learned policy adapts to the frame, payload, wind and motor health, a guard with a tuning-free fallback watches over it, and the drone reports its own condition. It is built to run as a small C library on the flight controller.
+
+![Controller architecture](docs/architecture.png)
+
+The targets it is built against are in [docs/requirements.md](docs/requirements.md).

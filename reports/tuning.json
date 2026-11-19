@@ -1,0 +1,14 @@
+{
+  "gains": {
+    "position": 2.17,
+    "velocity": 6.96,
+    "velocity_integral": 0.51,
+    "attitude": 11.39,
+    "rate": 24.29,
+    "rate_integral": 51.79
+  },
+  "tracking": 0.0159816462546587,
+  "step_error": 0.028735755011439323,
+  "slow_motor_step_error": 0.024057555943727493,
+  "candidates": 512
+}

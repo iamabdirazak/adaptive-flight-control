@@ -1,0 +1,16 @@
+[project]
+name = "adaptive-flight-control"
+version = "0.1.0"
+description = "A modular adaptive flight controller for quadrotors, with a learned policy that adapts to frame, payload, wind and motor health."
+readme = "README.md"
+license = "MIT"
+authors = [{ name = "Abdirazak Mubarak" }]
+requires-python = ">=3.10"
+dependencies = [
+    "numpy",
+    "torch",
+    "matplotlib",
+]
+
+[project.optional-dependencies]
+test = ["pytest"]
