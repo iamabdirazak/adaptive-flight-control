@@ -1,0 +1,69 @@
+{
+  "mass": {
+    "unit": "%",
+    "target": 10.0,
+    "scenario": "S2",
+    "median": 10.248494148254395,
+    "p95": 21.952116012573242,
+    "within": 0.48500001430511475
+  },
+  "mass_thrust_referenced": {
+    "unit": "%",
+    "scenario": "S2",
+    "median": 0.01291036605834961,
+    "p95": 0.02326786331832409,
+    "within": 1.0
+  },
+  "motor_lag": {
+    "unit": "ms",
+    "scenario": "S2",
+    "median": 0.7625650763511658,
+    "p95": 0.7774361371994019,
+    "within": 1.0
+  },
+  "inertia_roll": {
+    "unit": "%",
+    "scenario": "S2",
+    "median": 135.80569458007812,
+    "p95": 276.7723388671875,
+    "within": 0.0
+  },
+  "inertia_pitch": {
+    "unit": "%",
+    "scenario": "S2",
+    "median": 19.48866844177246,
+    "p95": 59.54854202270508,
+    "within": 0.2800000011920929
+  },
+  "inertia_yaw": {
+    "unit": "%",
+    "scenario": "S2",
+    "median": 10.120403289794922,
+    "p95": 27.259572982788086,
+    "within": 0.47999998927116394
+  },
+  "mass_payload": {
+    "unit": "%",
+    "target": 10.0,
+    "scenario": "S3",
+    "median": 0.017970800399780273,
+    "p95": 0.017970800399780273,
+    "within": 1.0
+  },
+  "motor_health_S5": {
+    "unit": "pp",
+    "target": 10.0,
+    "scenario": "S5",
+    "median": 0.007832050323486328,
+    "p95": 0.007832050323486328,
+    "within": 1.0
+  },
+  "motor_health_S6": {
+    "unit": "pp",
+    "target": 10.0,
+    "scenario": "S6",
+    "median": 0.020378828048706055,
+    "p95": 77.3233642578125,
+    "within": 0.8500000238418579
+  }
+}
