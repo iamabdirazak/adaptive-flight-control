@@ -1,0 +1,232 @@
+{
+  "name": "Adaptive Flight Controller",
+  "task": "Position and attitude control of a compact quadrotor whose mass, inertia, motor lag and motor health are unknown or change in flight, with a cascaded PID that adapts where fixed gains were measured to fail",
+  "vehicle": {
+    "layout": "Quadrotor X, PX4 motor order",
+    "diagonal_mm": 220,
+    "mass_kg": 0.5,
+    "inertia_kg_m2": [
+      0.0016,
+      0.0016,
+      0.0028
+    ],
+    "thrust_to_weight": 4.0,
+    "motor_time_constant_s": 0.02,
+    "description": "First estimates for a 5-inch class drone, to be replaced by datasheet values"
+  },
+  "controller": {
+    "file": "src/control/adaptive.py",
+    "structure": "Cascaded PID: position, velocity, attitude on SO(3), body rate, mixer that gives up yaw first",
+    "rate_hz": 500,
+    "physics_rate_hz": 2000,
+    "gains": {
+      "position": 2.17,
+      "velocity": 6.96,
+      "velocity_integral": 0.51,
+      "attitude": 11.39,
+      "rate": 24.29,
+      "rate_integral": 51.79
+    },
+    "gains_tuned_on": "nominal drone, 512 candidate sets, figure-eight and step, with a margin for motors twice as slow"
+  },
+  "adaptation": {
+    "weight": {
+      "method": "Hover-thrust estimation from commanded thrust and vertical acceleration, near level only",
+      "time_constant_s": 0.6
+    },
+    "motor_lag": {
+      "method": "Least squares with forgetting on how fast measured RPM closes on the command",
+      "memory_s": 2.0,
+      "use": "attitude and rate gains scaled by 0.045 s over the measured lag, from 0.4 to 1"
+    },
+    "inertia": {
+      "method": "Least squares with forgetting of each motor's turning effect per axis from RPM and gyro, median of four motors",
+      "memory_s": 2.0
+    },
+    "motor_health": {
+      "method": "Steady gap between roll and pitch torque expected from RPM and torque seen by the gyro, resolved per motor",
+      "smoothing_s": 0.15
+    },
+    "motor_failure_mode": "built, switched off (FAILURE_MODE = False)"
+  },
+  "test": {
+    "trials_per_scenario": 200,
+    "seeds": "fixed, the scenario number",
+    "baseline": "Fair PID: the same cascade with fixed gains, hover-thrust estimation and rate integral, as PX4 ships",
+    "passed": {
+      "S1": {
+        "name": "Nominal flight",
+        "fair_pid": 1.0,
+        "adaptive": 1.0
+      },
+      "S2": {
+        "name": "Unknown airframe",
+        "fair_pid": 1.0,
+        "adaptive": 1.0
+      },
+      "S3": {
+        "name": "Payload added",
+        "fair_pid": 1.0,
+        "adaptive": 1.0
+      },
+      "S4": {
+        "name": "Wind and gusts",
+        "fair_pid": 1.0,
+        "adaptive": 1.0
+      },
+      "S5": {
+        "name": "Weak motor",
+        "fair_pid": 1.0,
+        "adaptive": 1.0
+      },
+      "S6": {
+        "name": "Motor damage",
+        "fair_pid": 0.155,
+        "adaptive": 0.56
+      },
+      "S7": {
+        "name": "Combined changes",
+        "fair_pid": 0.0,
+        "adaptive": 0.125
+      },
+      "S8": {
+        "name": "Extreme airframe",
+        "fair_pid": 0.965,
+        "adaptive": 1.0
+      },
+      "S9": {
+        "name": "Motor failure",
+        "fair_pid": 0.0,
+        "adaptive": 0.0
+      }
+    },
+    "median": {
+      "S1": {
+        "metric": "rms",
+        "unit": "m",
+        "fair_pid": 0.0162,
+        "adaptive": 0.0162
+      },
+      "S2": {
+        "metric": "rms",
+        "unit": "m",
+        "fair_pid": 0.0172,
+        "adaptive": 0.0173
+      },
+      "S3": {
+        "metric": "drop",
+        "unit": "m",
+        "fair_pid": 0.0802,
+        "adaptive": 0.0802
+      },
+      "S4": {
+        "metric": "deviation",
+        "unit": "m",
+        "fair_pid": 0.0558,
+        "adaptive": 0.0587
+      },
+      "S5": {
+        "metric": "deviation",
+        "unit": "m",
+        "fair_pid": 0.0901,
+        "adaptive": 0.0691
+      },
+      "S6": {
+        "metric": "deviation",
+        "unit": "m",
+        "fair_pid": 0.6859,
+        "adaptive": 0.2877
+      },
+      "S7": {
+        "metric": "deviation",
+        "unit": "m",
+        "fair_pid": 0.4231,
+        "adaptive": 0.3537
+      },
+      "S8": {
+        "metric": "rms",
+        "unit": "m",
+        "fair_pid": 0.0181,
+        "adaptive": 0.0177
+      },
+      "S9": {
+        "metric": "landing",
+        "unit": "m",
+        "fair_pid": null,
+        "adaptive": null
+      }
+    },
+    "notes": "S6 and S7 count trials held within 0.3 m of hover. S9 is outside the operating envelope."
+  },
+  "readout": {
+    "mass": {
+      "scenario": "S2",
+      "unit": "%",
+      "median_error": 10.248,
+      "p95_error": 21.952,
+      "share_within": 0.485
+    },
+    "mass_thrust_referenced": {
+      "scenario": "S2",
+      "unit": "%",
+      "median_error": 0.013,
+      "p95_error": 0.023,
+      "share_within": 1.0
+    },
+    "motor_lag": {
+      "scenario": "S2",
+      "unit": "ms",
+      "median_error": 0.763,
+      "p95_error": 0.777,
+      "share_within": 1.0
+    },
+    "inertia_roll": {
+      "scenario": "S2",
+      "unit": "%",
+      "median_error": 135.806,
+      "p95_error": 276.772,
+      "share_within": 0.0
+    },
+    "inertia_pitch": {
+      "scenario": "S2",
+      "unit": "%",
+      "median_error": 19.489,
+      "p95_error": 59.549,
+      "share_within": 0.28
+    },
+    "inertia_yaw": {
+      "scenario": "S2",
+      "unit": "%",
+      "median_error": 10.12,
+      "p95_error": 27.26,
+      "share_within": 0.48
+    },
+    "mass_payload": {
+      "scenario": "S3",
+      "unit": "%",
+      "median_error": 0.018,
+      "p95_error": 0.018,
+      "share_within": 1.0
+    },
+    "motor_health_S5": {
+      "scenario": "S5",
+      "unit": "pp",
+      "median_error": 0.008,
+      "p95_error": 0.008,
+      "share_within": 1.0
+    },
+    "motor_health_S6": {
+      "scenario": "S6",
+      "unit": "pp",
+      "median_error": 0.02,
+      "p95_error": 77.323,
+      "share_within": 0.85
+    }
+  },
+  "envelope": {
+    "in": "mass ±45 %, inertia ±60 %, motor constants ±30 %, motor lag up to 60 ms, wind up to 8 m/s, one motor down to 60 %",
+    "edge": "one motor at 20 to 40 % thrust",
+    "out": "one motor failing completely"
+  },
+  "license": "MIT"
+}

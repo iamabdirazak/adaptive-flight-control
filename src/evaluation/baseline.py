@@ -1,12 +1,15 @@
-"""The PID baseline flown through every scenario, the numbers to beat.
+"""Every scenario flown by the PID baseline, or by the adaptive controller.
 
-    python -m src.evaluation.baseline
+    python -m src.evaluation.baseline             # the fair PID, reports/baseline.json
+    python -m src.evaluation.baseline adaptive    # the adaptive controller, reports/adaptive.json
 """
 import json
+import sys
 
 import matplotlib.pyplot as plt
 import torch
 
+from ..control.adaptive import Adaptive
 from ..control.cascade import Cascade
 from ..paths import FIGURES, REPORTS
 from ..plant.vehicle import Vehicle
@@ -53,10 +56,13 @@ def figure(results, name="baseline"):
 
 def main():
     vehicle = Vehicle()
-    results = study(lambda n: Cascade(vehicle, n), vehicle)
+    adaptive = sys.argv[1:] == ["adaptive"]
+    controller = Adaptive if adaptive else Cascade
+    results = study(lambda n: controller(vehicle, n), vehicle)
     REPORTS.mkdir(exist_ok=True)
-    (REPORTS / "baseline.json").write_text(json.dumps(results, indent=2))
-    figure(results)
+    (REPORTS / ("adaptive.json" if adaptive else "baseline.json")).write_text(json.dumps(results, indent=2))
+    if not adaptive:
+        figure(results)
 
 
 if __name__ == "__main__":
